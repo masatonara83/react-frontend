@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
+import EmployeeService from '../service/EmployeeService';
 
 class ListEmployeeComponent extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      emplolees : []
+      employees : []
     }
+    this.addEmployee = this.addEmployee.bind(this);
+  }
+
+  componentDidMount(){
+    EmployeeService.getEmployees().then((res) => {
+      this.setState({ employees : res.data})
+    })
+  }
+
+  addEmployee(){
+    this.props.history.push('/add-employee');
   }
 
   render() {
@@ -14,7 +26,10 @@ class ListEmployeeComponent extends Component {
       <div>
         <h2 className="text-center">Employee List</h2>
         <div className="row">
-          <table className="table table-striped table-borderd">
+          <button className="btn btn-primary w-25" onClick={this.addEmployee}>従業員の追加</button>
+        </div>
+        <div className="row">
+          <table className="table table-striped table-border">
             <thead>
               <tr>
                 <th>Employee First Name</th>
@@ -26,8 +41,8 @@ class ListEmployeeComponent extends Component {
 
             <tbody>
               {
-                this.state.emplolees.map(
-                  emplyee =>
+                this.state.employees.map(
+                  employee =>
                   <tr key = {employee.id}>
                     <td> { employee.firstName} </td>
                     <td> { employee.lastName} </td>
